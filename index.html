@@ -1,0 +1,1366 @@
+<!DOCTYPE html>
+<html lang="nl" id="html-root">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="author" content="S. Nolte, H.R. Moes, G. Drost, UMCG">
+    <meta name="description" content="KTNS Calculator - validated screening tool for polyneuropathy in kidney transplant recipients">
+    <meta name="citation_title" content="Polyneuropathy in Kidney Transplant Recipients: Accuracy of a New Clinical Diagnostic Scoring System">
+    <meta name="citation_author" content="Nolte, S.">
+    <meta name="citation_publication_date" content="2025">
+
+    <title>KTNS Calculator - Clinical Diagnostic Tool</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            /* Modern Medical Color Palette */
+            --primary-blue: #2563EB;
+            --primary-blue-light: #3B82F6;
+            --primary-blue-dark: #1E40AF;
+
+            --accent-teal: #14B8A6;
+            --accent-teal-light: #5EEAD4;
+
+            --secondary-blue: #EFF6FF;
+            --secondary-blue-mid: #DBEAFE;
+
+            --gray-50: #F8FAFC;
+            --gray-100: #F1F5F9;
+            --gray-200: #E2E8F0;
+            --gray-300: #CBD5E1;
+            --gray-400: #94A3B8;
+            --gray-600: #475569;
+            --gray-700: #334155;
+            --gray-900: #0F172A;
+
+            --success-green: #10B981;
+            --success-light: #D1FAE5;
+            --warning-amber: #F59E0B;
+            --warning-light: #FEF3C7;
+            --error-red: #EF4444;
+
+            --border-radius: 12px;
+            --border-radius-lg: 16px;
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #EFF6FF 0%, #F8FAFC 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: var(--gray-900);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 920px;
+            margin: 0 auto;
+            background: white;
+            border-radius: var(--border-radius-lg);
+            box-shadow: var(--shadow-lg);
+            overflow: hidden;
+        }
+
+        /* Header - Modern Medical Style with Logo */
+        .header {
+            background: linear-gradient(135deg, var(--primary-blue) 0%, var(--accent-teal) 100%);
+            color: white;
+            padding: 36px 40px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(180deg, rgba(255,255,255,0.08) 0%, transparent 100%);
+            pointer-events: none;
+        }
+
+        .header-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            gap: 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .logo {
+            width: 64px;
+            height: 64px;
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            backdrop-filter: blur(10px);
+        }
+
+        .logo svg {
+            width: 36px;
+            height: 36px;
+        }
+
+        .header-text {
+            flex: 1;
+            width: 100%;
+        }
+
+        .language-toggle {
+            position: absolute;
+            top: 24px;
+            right: 40px;
+            display: flex;
+            gap: 0;
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 10px;
+            padding: 4px;
+            backdrop-filter: blur(10px);
+        }
+
+        .lang-btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 600;
+            color: white;
+            background: transparent;
+            transition: var(--transition);
+            letter-spacing: 0.5px;
+        }
+
+        .lang-btn.active {
+            background: rgba(255, 255, 255, 0.25);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .lang-btn:hover:not(.active) {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        h1 {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            letter-spacing: -0.5px;
+        }
+
+        .subtitle {
+            font-size: 16px;
+            opacity: 0.95;
+            font-weight: 500;
+            margin-bottom: 16px;
+        }
+
+        .validation-info {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 14px;
+            opacity: 0.95;
+            font-weight: 600;
+            padding: 10px 16px;
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 8px;
+            backdrop-filter: blur(10px);
+            margin-top: 4px;
+        }
+
+        /* Content Area */
+        .content {
+            padding: 36px 40px 40px;
+        }
+
+        .section {
+            margin-bottom: 24px;
+        }
+
+        /* Model Selector - Modern Cards */
+        .model-selector {
+            background: var(--gray-50);
+            border: 2px solid var(--gray-200);
+            border-radius: var(--border-radius);
+            padding: 24px;
+            margin-bottom: 32px;
+        }
+
+        .model-selector h3 {
+            color: var(--gray-900);
+            margin-bottom: 16px;
+            font-size: 15px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .model-options {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        .model-option {
+            padding: 20px;
+            border: 2px solid var(--gray-300);
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            transition: var(--transition);
+            background: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .model-option::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--primary-blue);
+            transform: scaleX(0);
+            transition: var(--transition);
+        }
+
+        .model-option:hover {
+            border-color: var(--primary-blue-light);
+            box-shadow: var(--shadow);
+            transform: translateY(-2px);
+        }
+
+        .model-option.selected {
+            border-color: var(--primary-blue);
+            background: var(--secondary-blue);
+            box-shadow: var(--shadow);
+        }
+
+        .model-option.selected::before {
+            transform: scaleX(1);
+        }
+
+        .model-option .model-name {
+            font-weight: 700;
+            color: var(--gray-900);
+            margin-bottom: 8px;
+            font-size: 16px;
+        }
+
+        .model-option .model-auc {
+            font-size: 12px;
+            color: var(--gray-600);
+            font-family: 'Courier New', monospace;
+            margin-bottom: 6px;
+            font-weight: 600;
+        }
+
+        .model-option .model-desc {
+            font-size: 13px;
+            color: var(--gray-600);
+            font-weight: 500;
+        }
+
+        /* Card/Panel System */
+        .card {
+            border: 2px solid var(--gray-200);
+            border-radius: var(--border-radius);
+            margin-bottom: 20px;
+            background: white;
+            overflow: hidden;
+            transition: var(--transition);
+        }
+
+        .card:hover {
+            box-shadow: var(--shadow);
+        }
+
+        .card-header {
+            padding: 18px 24px;
+            background: var(--gray-50);
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid var(--gray-200);
+            transition: var(--transition);
+        }
+
+        .card-header:hover {
+            background: var(--gray-100);
+        }
+
+        .card.expanded .card-header {
+            background: linear-gradient(135deg, var(--secondary-blue) 0%, var(--secondary-blue-mid) 100%);
+            border-bottom-color: var(--primary-blue-light);
+        }
+
+        .card-title {
+            font-weight: 700;
+            font-size: 16px;
+            color: var(--gray-900);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .card-icon {
+            transition: transform 0.3s ease;
+            color: var(--gray-600);
+            font-size: 14px;
+            font-weight: 700;
+        }
+
+        .card.expanded .card-icon {
+            transform: rotate(180deg);
+            color: var(--primary-blue);
+        }
+
+        .card-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .card.expanded .card-content {
+            max-height: 5000px;
+        }
+
+        .card-body {
+            padding: 28px 24px;
+        }
+
+        /* Info Boxes */
+        .info-box {
+            background: linear-gradient(135deg, var(--secondary-blue) 0%, #F0F9FF 100%);
+            border-left: 4px solid var(--primary-blue);
+            padding: 16px 20px;
+            margin-bottom: 24px;
+            border-radius: var(--border-radius);
+            font-size: 14px;
+            line-height: 1.6;
+            color: var(--primary-blue-dark);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .info-box strong {
+            font-weight: 700;
+            display: block;
+            margin-bottom: 4px;
+        }
+
+        /* Input Groups */
+        .input-group {
+            margin-bottom: 32px;
+        }
+
+        .input-group:last-child {
+            margin-bottom: 0;
+        }
+
+        label.field-label {
+            display: block;
+            margin-bottom: 14px;
+            font-weight: 700;
+            color: var(--gray-900);
+            font-size: 15px;
+        }
+
+        .radio-group {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 10px;
+        }
+
+        .radio-option {
+            display: flex;
+            align-items: center;
+            padding: 12px 14px;
+            border: 2px solid var(--gray-300);
+            border-radius: 10px;
+            cursor: pointer;
+            transition: var(--transition);
+            background: white;
+        }
+
+        .radio-option:hover {
+            background: var(--gray-50);
+            border-color: var(--primary-blue-light);
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .radio-option:has(input:checked) {
+            background: var(--secondary-blue);
+            border-color: var(--primary-blue);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .radio-option input[type="radio"] {
+            margin-right: 10px;
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+            accent-color: var(--primary-blue);
+        }
+
+        .radio-option label {
+            margin: 0;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--gray-900);
+            flex: 1;
+        }
+
+        .radio-option:has(input:checked) label {
+            font-weight: 700;
+        }
+
+        /* Score Display - Modern Gradient */
+        .score-display {
+            background: linear-gradient(135deg, var(--primary-blue) 0%, var(--accent-teal) 100%);
+            color: white;
+            padding: 40px;
+            border-radius: var(--border-radius);
+            text-align: center;
+            margin: 32px 0;
+            box-shadow: 0 20px 25px -5px rgba(37, 99, 235, 0.3), 0 10px 10px -5px rgba(37, 99, 235, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .score-display::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+            animation: pulse 3s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.1); opacity: 0.8; }
+        }
+
+        .score-value {
+            font-size: 72px;
+            font-weight: 800;
+            margin-bottom: 12px;
+            line-height: 1;
+            letter-spacing: -2px;
+            position: relative;
+            z-index: 1;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .score-label {
+            font-size: 18px;
+            opacity: 0.95;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Clinical Interpretation */
+        .interpretation {
+            padding: 24px;
+            border-radius: var(--border-radius);
+            margin: 28px 0;
+            border-left: 5px solid;
+            box-shadow: var(--shadow);
+        }
+
+        .interpretation.positive {
+            background: linear-gradient(135deg, var(--warning-light) 0%, #FFFBEB 100%);
+            border-color: var(--warning-amber);
+            color: #92400E;
+        }
+
+        .interpretation.negative {
+            background: linear-gradient(135deg, var(--success-light) 0%, #ECFDF5 100%);
+            border-color: var(--success-green);
+            color: #065F46;
+        }
+
+        .interpretation strong {
+            font-size: 16px;
+            font-weight: 700;
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        .interpretation span {
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        /* Table Styling */
+        .score-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            margin-top: 20px;
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .score-table th,
+        .score-table td {
+            padding: 14px 18px;
+            text-align: left;
+            border-bottom: 1px solid var(--gray-200);
+            font-size: 14px;
+        }
+
+        .score-table th {
+            background: linear-gradient(135deg, var(--gray-100) 0%, var(--gray-50) 100%);
+            font-weight: 700;
+            color: var(--gray-900);
+            text-transform: uppercase;
+            font-size: 12px;
+            letter-spacing: 0.5px;
+        }
+
+        .score-table tr:nth-child(even) {
+            background: var(--gray-50);
+        }
+
+        .score-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .score-table .total-row {
+            background: linear-gradient(135deg, var(--secondary-blue) 0%, var(--secondary-blue-mid) 100%);
+            font-weight: 700;
+        }
+
+        .score-table .value-cell {
+            text-align: right;
+            font-family: 'Courier New', monospace;
+            font-weight: 700;
+            color: var(--primary-blue);
+            font-size: 15px;
+        }
+
+        /* Export Section */
+        .export-area {
+            background: var(--gray-50);
+            padding: 18px;
+            border-radius: var(--border-radius);
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            white-space: pre-wrap;
+            margin-bottom: 16px;
+            border: 2px solid var(--gray-200);
+            max-height: 350px;
+            overflow-y: auto;
+            line-height: 1.6;
+            color: var(--gray-900);
+        }
+
+        /* Buttons */
+        .btn {
+            padding: 14px 28px;
+            border: none;
+            border-radius: 10px;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: var(--transition);
+            width: 100%;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            box-shadow: var(--shadow);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary-blue) 0%, var(--primary-blue-dark) 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 20px -5px rgba(37, 99, 235, 0.4);
+        }
+
+        .btn-primary:active {
+            transform: translateY(0);
+        }
+
+        .copy-success {
+            color: var(--success-green);
+            font-size: 14px;
+            margin-top: 14px;
+            display: none;
+            text-align: center;
+            font-weight: 600;
+        }
+
+        /* Disclaimer */
+        .disclaimer-text {
+            font-size: 14px;
+            line-height: 1.8;
+            color: var(--gray-700);
+        }
+
+        .disclaimer-text strong {
+            color: var(--gray-900);
+            font-weight: 700;
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 28px 40px;
+            color: var(--gray-600);
+            font-size: 13px;
+            background: linear-gradient(135deg, var(--gray-50) 0%, var(--gray-100) 100%);
+            border-top: 2px solid var(--gray-200);
+        }
+
+        .footer p {
+            margin: 8px 0;
+        }
+
+        .footer a {
+            color: var(--primary-blue);
+            text-decoration: none;
+            font-weight: 600;
+            transition: var(--transition);
+        }
+
+        .footer a:hover {
+            color: var(--primary-blue-dark);
+            text-decoration: underline;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            body {
+                padding: 12px;
+            }
+
+            .content {
+                padding: 24px 20px;
+            }
+
+            .header {
+                padding: 24px 20px 28px;
+            }
+
+            .header-content {
+                gap: 14px;
+            }
+
+            .logo {
+                width: 56px;
+                height: 56px;
+            }
+
+            .logo svg {
+                width: 28px;
+                height: 28px;
+            }
+
+            h1 {
+                font-size: 24px;
+            }
+
+            .subtitle {
+                font-size: 14px;
+            }
+
+            .model-options {
+                grid-template-columns: 1fr;
+            }
+
+            .radio-group {
+                grid-template-columns: 1fr;
+            }
+
+            .score-value {
+                font-size: 56px;
+            }
+
+            .language-toggle {
+                right: 20px;
+            }
+
+            .validation-info {
+                font-size: 11px;
+                padding: 8px 12px;
+                gap: 8px;
+            }
+        }
+
+        /* Print Styles */
+        @media print {
+            body {
+                background: white;
+                padding: 0;
+            }
+
+            .container {
+                box-shadow: none;
+            }
+
+            .language-toggle,
+            .card-icon {
+                display: none;
+            }
+
+            .card-content {
+                max-height: none !important;
+            }
+
+            .score-display::before {
+                display: none;
+            }
+        }
+
+        /* Scrollbar Styling */
+        .export-area::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .export-area::-webkit-scrollbar-track {
+            background: var(--gray-200);
+            border-radius: 4px;
+        }
+
+        .export-area::-webkit-scrollbar-thumb {
+            background: var(--gray-400);
+            border-radius: 4px;
+        }
+
+        .export-area::-webkit-scrollbar-thumb:hover {
+            background: var(--gray-600);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="language-toggle">
+                <div class="lang-btn" id="lang-nl" onclick="setLanguage('nl')">NL</div>
+                <div class="lang-btn" id="lang-en" onclick="setLanguage('en')">EN</div>
+            </div>
+
+            <div class="header-content">
+                <div class="logo">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+                    </svg>
+                </div>
+                <div class="header-text">
+                    <h1 class="text-title">KTNS Calculator</h1>
+                    <div class="subtitle text-subtitle">Kidney Transplant Neuropathy Score</div>
+                    <div class="validation-info">
+                        <span class="text-validation">AUC 0.85–0.90 • Cutoff ≥3</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="content">
+            <!-- Model Selection -->
+            <div class="model-selector">
+                <h3 class="text-select-model">Select Model</h3>
+                <div class="model-options">
+                    <div class="model-option selected" id="model-basic" onclick="selectModel('basic')">
+                        <div class="model-name text-model-basic">KTNS-Basic</div>
+                        <div class="model-auc">AUC: 0.85 | Sens: 68% | Spec: 87%</div>
+                        <div class="model-desc text-model-basic-desc">For non-neurologists</div>
+                    </div>
+                    <div class="model-option" id="model-advanced" onclick="selectModel('advanced')">
+                        <div class="model-name text-model-advanced">KTNS-Advanced</div>
+                        <div class="model-auc">AUC: 0.90 | Sens: 81% | Spec: 81%</div>
+                        <div class="model-desc text-model-advanced-desc">With reflex examination</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Assessment Section -->
+            <div class="section">
+                <div class="card expanded" id="calc-section">
+                    <div class="card-header" onclick="toggleCard('calc-section')">
+                        <span class="card-title text-calc-title">Clinical Assessment</span>
+                        <span class="card-icon">▼</span>
+                    </div>
+
+                    <div class="card-content">
+                        <div class="card-body">
+                            <div class="info-box text-info-anamnesis">
+                                <strong>Patient Symptoms:</strong> Ask about symptoms in the <strong>feet</strong>. Score severity based on interference with activities of daily living (ADL).
+                            </div>
+
+                            <!-- Symptom Assessment -->
+                            <div class="input-group">
+                                <label class="field-label text-numbness-label">Numbness in feet</label>
+                                <div class="radio-group">
+                                    <div class="radio-option">
+                                        <input type="radio" id="numb-0" name="numbness" value="0" checked onchange="calculate()">
+                                        <label for="numb-0" class="text-absent">Absent</label>
+                                    </div>
+                                    <div class="radio-option">
+                                        <input type="radio" id="numb-1" name="numbness" value="1" onchange="calculate()">
+                                        <label for="numb-1" class="text-mild">Mild</label>
+                                    </div>
+                                    <div class="radio-option">
+                                        <input type="radio" id="numb-2" name="numbness" value="2" onchange="calculate()">
+                                        <label for="numb-2" class="text-moderate">Moderate</label>
+                                    </div>
+                                    <div class="radio-option">
+                                        <input type="radio" id="numb-3" name="numbness" value="3" onchange="calculate()">
+                                        <label for="numb-3" class="text-severe">Severe (ADL)</label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="input-group">
+                                <label class="field-label text-tingling-label">Tingling in feet</label>
+                                <div class="radio-group">
+                                    <div class="radio-option">
+                                        <input type="radio" id="ting-0" name="tingling" value="0" checked onchange="calculate()">
+                                        <label for="ting-0" class="text-absent">Absent</label>
+                                    </div>
+                                    <div class="radio-option">
+                                        <input type="radio" id="ting-1" name="tingling" value="1" onchange="calculate()">
+                                        <label for="ting-1" class="text-mild">Mild</label>
+                                    </div>
+                                    <div class="radio-option">
+                                        <input type="radio" id="ting-2" name="tingling" value="2" onchange="calculate()">
+                                        <label for="ting-2" class="text-moderate">Moderate</label>
+                                    </div>
+                                    <div class="radio-option">
+                                        <input type="radio" id="ting-3" name="tingling" value="3" onchange="calculate()">
+                                        <label for="ting-3" class="text-severe">Severe (ADL)</label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="info-box text-info-tests">
+                                <strong>Clinical Tests:</strong> Test bilaterally. Score as abnormal only if <strong>both sides</strong> are affected.
+                            </div>
+
+                            <!-- Clinical Tests -->
+                            <div class="input-group">
+                                <label class="field-label text-pinprick-label">Pinprick Test (Nociception)</label>
+                                <div class="radio-group">
+                                    <div class="radio-option">
+                                        <input type="radio" id="pin-0" name="pinprick" value="0" checked onchange="calculate()">
+                                        <label for="pin-0" class="text-normal">Normal</label>
+                                    </div>
+                                    <div class="radio-option">
+                                        <input type="radio" id="pin-1" name="pinprick" value="1" onchange="calculate()">
+                                        <label for="pin-1">↓ Both toes</label>
+                                    </div>
+                                    <div class="radio-option">
+                                        <input type="radio" id="pin-2" name="pinprick" value="2" onchange="calculate()">
+                                        <label for="pin-2">↓ To dorsum</label>
+                                    </div>
+                                    <div class="radio-option">
+                                        <input type="radio" id="pin-3" name="pinprick" value="3" onchange="calculate()">
+                                        <label for="pin-3">↓ Above ankle</label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- KTNS-Basic: Vibration -->
+                            <div class="input-group" id="vibration-group">
+                                <label class="field-label text-vibration-label">Vibration Perception (Biothesiometer)</label>
+                                <div class="radio-group">
+                                    <div class="radio-option">
+                                        <input type="radio" id="vib-0" name="vibration" value="0" checked onchange="calculate()">
+                                        <label for="vib-0" class="text-normal">Normal</label>
+                                    </div>
+                                    <div class="radio-option">
+                                        <input type="radio" id="vib-1" name="vibration" value="1" onchange="calculate()">
+                                        <label for="vib-1">↓ Both toes</label>
+                                    </div>
+                                    <div class="radio-option">
+                                        <input type="radio" id="vib-2" name="vibration" value="2" onchange="calculate()">
+                                        <label for="vib-2">↓ To dorsum</label>
+                                    </div>
+                                    <div class="radio-option">
+                                        <input type="radio" id="vib-3" name="vibration" value="3" onchange="calculate()">
+                                        <label for="vib-3">↓ To malleoli</label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- KTNS-Advanced: Reflexes -->
+                            <div id="reflex-group" style="display:none">
+                                <div class="input-group">
+                                    <label class="field-label text-achilles-label">Achilles Tendon Reflex</label>
+                                    <div class="radio-group">
+                                        <div class="radio-option">
+                                            <input type="radio" id="ach-0" name="achilles" value="0" checked onchange="calculate()">
+                                            <label for="ach-0" class="text-normal">Normal</label>
+                                        </div>
+                                        <div class="radio-option">
+                                            <input type="radio" id="ach-1" name="achilles" value="1" onchange="calculate()">
+                                            <label for="ach-1" class="text-reduced">Reduced</label>
+                                        </div>
+                                        <div class="radio-option">
+                                            <input type="radio" id="ach-2" name="achilles" value="2" onchange="calculate()">
+                                            <label for="ach-2" class="text-absent">Absent</label>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="input-group">
+                                    <label class="field-label text-patellar-label">Patellar Tendon Reflex</label>
+                                    <div class="radio-group">
+                                        <div class="radio-option">
+                                            <input type="radio" id="pat-0" name="patellar" value="0" checked onchange="calculate()">
+                                            <label for="pat-0" class="text-normal">Normal</label>
+                                        </div>
+                                        <div class="radio-option">
+                                            <input type="radio" id="pat-1" name="patellar" value="1" onchange="calculate()">
+                                            <label for="pat-1" class="text-reduced">Reduced</label>
+                                        </div>
+                                        <div class="radio-option">
+                                            <input type="radio" id="pat-2" name="patellar" value="2" onchange="calculate()">
+                                            <label for="pat-2" class="text-absent">Absent</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Score Display -->
+                            <div class="score-display">
+                                <div class="score-value" id="ktns-score">0</div>
+                                <div class="score-label" id="score-label">KTNS-Basic Score</div>
+                            </div>
+
+                            <!-- Clinical Interpretation -->
+                            <div class="interpretation negative" id="interpretation">
+                                <strong class="text-score-low">Score <3 — Low Risk</strong>
+                                <span class="text-interpretation-low">No indication for neurologist referral at this time. Continue routine monitoring.</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Score Breakdown -->
+            <div class="section">
+                <div class="card" id="advanced-section">
+                    <div class="card-header" onclick="toggleCard('advanced-section')">
+                        <span class="card-title text-advanced-title">Score Breakdown</span>
+                        <span class="card-icon">▼</span>
+                    </div>
+
+                    <div class="card-content">
+                        <div class="card-body">
+                            <table class="score-table">
+                                <thead>
+                                    <tr>
+                                        <th>Component</th>
+                                        <th style="text-align:right">Score</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td class="text-numbness-component">Numbness</td>
+                                        <td class="value-cell" id="numb-component">0</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-tingling-component">Tingling</td>
+                                        <td class="value-cell" id="ting-component">0</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-pinprick-component">Pinprick Test</td>
+                                        <td class="value-cell" id="pin-component">0</td>
+                                    </tr>
+                                    <tr id="vib-row">
+                                        <td class="text-vibration-component">Vibration Perception</td>
+                                        <td class="value-cell" id="vib-component">0</td>
+                                    </tr>
+                                    <tr id="ach-row" style="display:none">
+                                        <td class="text-achilles-component">Achilles Reflex</td>
+                                        <td class="value-cell" id="ach-component">0</td>
+                                    </tr>
+                                    <tr id="pat-row" style="display:none">
+                                        <td class="text-patellar-component">Patellar Reflex</td>
+                                        <td class="value-cell" id="pat-component">0</td>
+                                    </tr>
+                                    <tr class="total-row">
+                                        <td class="text-total">Total Score</td>
+                                        <td class="value-cell" id="total-component">0</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Clinical Notes Export -->
+            <div class="section">
+                <div class="card" id="export-section">
+                    <div class="card-header" onclick="toggleCard('export-section')">
+                        <span class="card-title text-export-title">Export for Medical Record</span>
+                        <span class="card-icon">▼</span>
+                    </div>
+
+                    <div class="card-content">
+                        <div class="card-body">
+                            <div class="export-area" id="export-text"></div>
+                            <button class="btn btn-primary" onclick="copyToClipboard()">
+                                <span class="text-copy-btn">Copy to Clipboard</span>
+                            </button>
+                            <div class="copy-success" id="copy-success">
+                                <span class="text-copied">✓ Copied successfully</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Clinical Information -->
+            <div class="section">
+                <div class="card" id="disclaimer-section">
+                    <div class="card-header" onclick="toggleCard('disclaimer-section')">
+                        <span class="card-title text-disclaimer-title">Clinical Information & Disclaimer</span>
+                        <span class="card-icon">▼</span>
+                    </div>
+
+                    <div class="card-content">
+                        <div class="card-body">
+                            <div class="disclaimer-text text-disclaimer-content">
+                                <strong>Purpose:</strong> The KTNS (Kidney Transplant Neuropathy Score) is a validated screening tool designed to support clinical decision-making by physicians. It helps identify kidney transplant recipients who may benefit from further neurological diagnostic evaluation.<br><br>
+
+                                <strong>Intended Use:</strong> This tool is validated for kidney transplant recipients ≥12 months post-transplantation during routine outpatient follow-up. Definitive diagnosis of polyneuropathy requires additional testing such as nerve conduction studies (NCS) and/or quantitative sensory testing (QST).<br><br>
+
+                                <strong>Validation:</strong> KTNS was validated in a Dutch cohort of 160 kidney transplant recipients using an expert panel of three neurologists as reference standard. KTNS-Basic: AUC 0.85 (95% CI: 0.79-0.90), sensitivity 68%, specificity 87%. KTNS-Advanced: AUC 0.90 (95% CI: 0.85-0.94), sensitivity 81%, specificity 81%. Cutoff for both models: ≥3 points.<br><br>
+
+                                <strong>Clinical Responsibility:</strong> The treating physician remains responsible for all clinical decisions. This tool does not generate diagnoses and does not replace clinical examination or professional medical judgment.<br><br>
+
+                                <strong>Reference:</strong> Nolte et al. (2025). Polyneuropathy in Kidney Transplant Recipients: Accuracy of a New Clinical Diagnostic Scoring System. J Peripher Nerv Syst, 30, e70058.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p><strong>© 2025 S. Nolte, H.R. Moes, G. Drost</strong> | University Medical Center Groningen</p>
+            <p style="margin-top:8px;font-size:11px">
+                Nolte et al. (2025). J Peripher Nerv Syst, 30, e70058 |
+                <a href="https://doi.org/10.1111/jns.70058" target="_blank" rel="noopener noreferrer">Open Access Article</a>
+            </p>
+            <p style="margin-top:8px">
+                <a href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank" rel="noopener noreferrer">
+                    CC BY-NC-ND 4.0 License
+                </a>
+            </p>
+        </div>
+    </div>
+
+    <script>
+        // Detect language based on geolocation/browser settings
+        function detectLanguage() {
+            // Check browser language
+            const browserLang = navigator.language || navigator.userLanguage;
+            // Check if the user is from Netherlands (nl-NL) or Belgium (nl-BE)
+            if (browserLang.startsWith('nl')) {
+                return 'nl';
+            }
+            // Default to English for all other languages
+            return 'en';
+        }
+
+        let currentLanguage = detectLanguage();
+        let currentModel = 'basic';
+
+        const translations = {
+            'nl': {
+                'text-title': 'KTNS Calculator',
+                'text-subtitle': 'Kidney Transplant Neuropathy Score',
+                'text-validation': 'AUC 0.85–0.90 • Cutoff ≥3',
+                'text-select-model': 'Selecteer Model',
+                'text-model-basic': 'KTNS-Basic',
+                'text-model-basic-desc': 'Voor niet-neurologen',
+                'text-model-advanced': 'KTNS-Advanced',
+                'text-model-advanced-desc': 'Met reflexonderzoek',
+                'text-calc-title': 'Klinische Beoordeling',
+                'text-info-anamnesis': '<strong>Patiënt Symptomen:</strong> Vraag naar symptomen in de voeten. Afwezig = geen symptomen. Mild = symptoom aanwezig, geen hinder. Matig = symptoom aanwezig, enige hinder. Ernstig (ADL) = symptoom veroorzaakt significante beperking in dagelijkse activiteiten.',
+                'text-numbness-label': 'Gevoelloosheid voeten',
+                'text-tingling-label': 'Tintelingen voeten',
+                'text-absent': 'Afwezig',
+                'text-mild': 'Mild',
+                'text-moderate': 'Matig',
+                'text-severe': 'Ernstig (ADL)',
+                'text-info-tests': '<strong>Klinische Tests:</strong> Test bilateraal (linker en rechter voet/been). Score als afwijkend alleen als beide zijden verminderde sensibiliteit vertonen. Bij eenzijdige afwijking = score Normaal.',
+                'text-pinprick-label': 'Prikpijntest (Nociceptie)',
+                'text-vibration-label': 'Trillingszin (Biothesiometer)',
+                'text-achilles-label': 'Achillespeesreflex',
+                'text-patellar-label': 'Patellapeesreflex',
+                'text-normal': 'Normaal',
+                'text-reduced': 'Verminderd',
+                'text-score-low': 'Score <3 — Laag Risico',
+                'text-interpretation-low': 'Geen indicatie voor verwijzing naar neuroloog op dit moment. Voortzetten routine monitoring.',
+                'text-score-high': 'Score ≥3 — Verhoogd Risico',
+                'text-interpretation-high': 'Overweeg verwijzing naar neuroloog voor verdere diagnostiek (NCS/QST) en behandelingsopties.',
+                'text-advanced-title': 'Score Uitsplitsing',
+                'text-breakdown-title': 'Score Uitsplitsing',
+                'text-numbness-component': 'Gevoelloosheid',
+                'text-tingling-component': 'Tintelingen',
+                'text-pinprick-component': 'Prikpijntest',
+                'text-vibration-component': 'Trillingszin',
+                'text-achilles-component': 'Achillesreflex',
+                'text-patellar-component': 'Patellareflex',
+                'text-total': 'Totale Score',
+                'text-disclaimer-title': 'Klinische Informatie & Disclaimer',
+                'text-disclaimer-content': '<strong>Doel:</strong> De KTNS (Kidney Transplant Neuropathy Score) is een screeningsinstrument ontworpen om klinische besluitvorming door artsen te ondersteunen. Het helpt bij het identificeren van niertransplantatiepatiënten die mogelijk baat hebben bij verdere neurologische diagnostische evaluatie.<br><br><strong>Beoogd Gebruik:</strong> Dit instrument is gevalideerd voor niertransplantatiepatiënten ≥12 maanden post-transplantatie tijdens routine poliklinische controle. Definitieve diagnose van polyneuropathie vereist aanvullend onderzoek zoals zenuwgeleidingsonderzoek (NCS) en/of kwantitatief sensorisch testen (QST).<br><br><strong>Validatie:</strong> KTNS is gevalideerd in een Nederlands cohort van 160 niertransplantatiepatiënten met een expertpanel van drie neurologen als referentiestandaard. KTNS-Basic: AUC 0.85 (95% BI: 0.79-0.90), sensitiviteit 68%, specificiteit 87%. KTNS-Advanced: AUC 0.90 (95% BI: 0.85-0.94), sensitiviteit 81%, specificiteit 81%. Cutoff voor beide modellen: ≥3 punten.<br><br><strong>Klinische Verantwoordelijkheid:</strong> De behandelend arts blijft verantwoordelijk voor alle klinische beslissingen. Dit instrument genereert geen diagnoses en vervangt geen klinisch onderzoek of professioneel medisch oordeel.<br><br><strong>Referentie:</strong> Nolte et al. (2025). Polyneuropathy in Kidney Transplant Recipients: Accuracy of a New Clinical Diagnostic Scoring System. J Peripher Nerv Syst, 30, e70058.',
+                'text-export-title': 'Exporteren voor Medisch Dossier',
+                'text-copy-btn': 'Kopiëren naar Klembord',
+                'text-copied': '✓ Succesvol gekopieerd'
+            },
+            'en': {
+                'text-title': 'KTNS Calculator',
+                'text-subtitle': 'Kidney Transplant Neuropathy Score',
+                'text-validation': 'AUC 0.85–0.90 • Cutoff ≥3',
+                'text-select-model': 'Select Model',
+                'text-model-basic': 'KTNS-Basic',
+                'text-model-basic-desc': 'For non-neurologists',
+                'text-model-advanced': 'KTNS-Advanced',
+                'text-model-advanced-desc': 'With reflex examination',
+                'text-calc-title': 'Clinical Assessment',
+                'text-info-anamnesis': '<strong>Patient Symptoms:</strong> Ask about symptoms in the feet. Absent = no symptoms. Mild = symptom present, no interference. Moderate = symptom present, some interference. Severe (ADL) = symptom causes significant limitation in activities of daily living.',
+                'text-numbness-label': 'Numbness in feet',
+                'text-tingling-label': 'Tingling in feet',
+                'text-absent': 'Absent',
+                'text-mild': 'Mild',
+                'text-moderate': 'Moderate',
+                'text-severe': 'Severe (ADL)',
+                'text-info-tests': '<strong>Clinical Tests:</strong> Test bilaterally (left and right foot/leg). Score as abnormal only if both sides show reduced sensation. If unilateral abnormality = score Normal.',
+                'text-pinprick-label': 'Pinprick Test (Nociception)',
+                'text-vibration-label': 'Vibration Perception (Biothesiometer)',
+                'text-achilles-label': 'Achilles Tendon Reflex',
+                'text-patellar-label': 'Patellar Tendon Reflex',
+                'text-normal': 'Normal',
+                'text-reduced': 'Reduced',
+                'text-score-low': 'Score <3 — Low Risk',
+                'text-interpretation-low': 'No indication for neurologist referral at this time. Continue routine monitoring.',
+                'text-score-high': 'Score ≥3 — Elevated Risk',
+                'text-interpretation-high': 'Consider referral to neurologist for further diagnostics (NCS/QST) and treatment options.',
+                'text-advanced-title': 'Score Breakdown',
+                'text-breakdown-title': 'Score Breakdown',
+                'text-numbness-component': 'Numbness',
+                'text-tingling-component': 'Tingling',
+                'text-pinprick-component': 'Pinprick Test',
+                'text-vibration-component': 'Vibration Perception',
+                'text-achilles-component': 'Achilles Reflex',
+                'text-patellar-component': 'Patellar Reflex',
+                'text-total': 'Total Score',
+                'text-disclaimer-title': 'Clinical Information & Disclaimer',
+                'text-disclaimer-content': '<strong>Purpose:</strong> The KTNS (Kidney Transplant Neuropathy Score) is a screening tool designed to support clinical decision-making by physicians. It helps identify kidney transplant recipients who may benefit from further neurological diagnostic evaluation.<br><br><strong>Intended Use:</strong> This tool is validated for kidney transplant recipients ≥12 months post-transplantation during routine outpatient follow-up. Definitive diagnosis of polyneuropathy requires additional testing such as nerve conduction studies (NCS) and/or quantitative sensory testing (QST).<br><br><strong>Validation:</strong> KTNS was validated in a Dutch cohort of 160 kidney transplant recipients using an expert panel of three neurologists as reference standard. KTNS-Basic: AUC 0.85 (95% CI: 0.79-0.90), sensitivity 68%, specificity 87%. KTNS-Advanced: AUC 0.90 (95% CI: 0.85-0.94), sensitivity 81%, specificity 81%. Cutoff for both models: ≥3 points.<br><br><strong>Clinical Responsibility:</strong> The treating physician remains responsible for all clinical decisions. This tool does not generate diagnoses and does not replace clinical examination or professional medical judgment.<br><br><strong>Reference:</strong> Nolte et al. (2025). Polyneuropathy in Kidney Transplant Recipients: Accuracy of a New Clinical Diagnostic Scoring System. J Peripher Nerv Syst, 30, e70058.',
+                'text-export-title': 'Export for Medical Record',
+                'text-copy-btn': 'Copy to Clipboard',
+                'text-copied': '✓ Copied successfully'
+            }
+        };
+
+        function setLanguage(lang) {
+            currentLanguage = lang;
+
+            document.getElementById('lang-nl').classList.remove('active');
+            document.getElementById('lang-en').classList.remove('active');
+            document.getElementById('lang-' + lang).classList.add('active');
+
+            Object.keys(translations[lang]).forEach(key => {
+                const elements = document.querySelectorAll('.' + key);
+                elements.forEach(el => {
+                    if (key.includes('info') || key.includes('disclaimer-content') || key.includes('validation')) {
+                        el.innerHTML = translations[lang][key];
+                    } else {
+                        el.textContent = translations[lang][key];
+                    }
+                });
+            });
+
+            calculate();
+        }
+
+        function selectModel(model) {
+            currentModel = model;
+
+            document.getElementById('model-basic').classList.remove('selected');
+            document.getElementById('model-advanced').classList.remove('selected');
+            document.getElementById('model-' + model).classList.add('selected');
+
+            if (model === 'basic') {
+                document.getElementById('vibration-group').style.display = 'block';
+                document.getElementById('reflex-group').style.display = 'none';
+                document.getElementById('vib-row').style.display = 'table-row';
+                document.getElementById('ach-row').style.display = 'none';
+                document.getElementById('pat-row').style.display = 'none';
+            } else {
+                document.getElementById('vibration-group').style.display = 'none';
+                document.getElementById('reflex-group').style.display = 'block';
+                document.getElementById('vib-row').style.display = 'none';
+                document.getElementById('ach-row').style.display = 'table-row';
+                document.getElementById('pat-row').style.display = 'table-row';
+            }
+
+            calculate();
+        }
+
+        function toggleCard(id) {
+            const card = document.getElementById(id);
+            card.classList.toggle('expanded');
+        }
+
+        function calculate() {
+            const numbness = parseInt(document.querySelector('input[name="numbness"]:checked').value);
+            const tingling = parseInt(document.querySelector('input[name="tingling"]:checked').value);
+            const pinprick = parseInt(document.querySelector('input[name="pinprick"]:checked').value);
+
+            let score = numbness + tingling + pinprick;
+            let maxScore = 12;
+
+            if (currentModel === 'basic') {
+                const vibration = parseInt(document.querySelector('input[name="vibration"]:checked').value);
+                score += vibration;
+                document.getElementById('score-label').textContent = 'KTNS-Basic Score';
+
+                document.getElementById('numb-component').textContent = numbness;
+                document.getElementById('ting-component').textContent = tingling;
+                document.getElementById('pin-component').textContent = pinprick;
+                document.getElementById('vib-component').textContent = vibration;
+            } else {
+                const achilles = parseInt(document.querySelector('input[name="achilles"]:checked').value);
+                const patellar = parseInt(document.querySelector('input[name="patellar"]:checked').value);
+                score += achilles + patellar;
+                maxScore = 13;
+                document.getElementById('score-label').textContent = 'KTNS-Advanced Score';
+
+                document.getElementById('numb-component').textContent = numbness;
+                document.getElementById('ting-component').textContent = tingling;
+                document.getElementById('pin-component').textContent = pinprick;
+                document.getElementById('ach-component').textContent = achilles;
+                document.getElementById('pat-component').textContent = patellar;
+            }
+
+            document.getElementById('ktns-score').textContent = score;
+            document.getElementById('total-component').textContent = score;
+
+            const interpretation = document.getElementById('interpretation');
+            if (score >= 3) {
+                interpretation.className = 'interpretation positive';
+                interpretation.innerHTML = `<strong>${translations[currentLanguage]['text-score-high']}</strong><br><span>${translations[currentLanguage]['text-interpretation-high']}</span>`;
+            } else {
+                interpretation.className = 'interpretation negative';
+                interpretation.innerHTML = `<strong>${translations[currentLanguage]['text-score-low']}</strong><br><span>${translations[currentLanguage]['text-interpretation-low']}</span>`;
+            }
+
+            updateExportText(score, maxScore, numbness, tingling, pinprick);
+        }
+
+        function updateExportText(score, maxScore, numbness, tingling, pinprick) {
+            const date = new Date().toLocaleDateString(currentLanguage === 'nl' ? 'nl-NL' : 'en-US');
+            const model = currentModel === 'basic' ? 'KTNS-Basic' : 'KTNS-Advanced';
+            const interp = score >= 3 ?
+                (currentLanguage === 'nl' ? 'Verhoogd risico - overweeg verwijzing neuroloog' : 'Elevated risk - consider neurologist referral') :
+                (currentLanguage === 'nl' ? 'Laag risico - routine monitoring' : 'Low risk - routine monitoring');
+
+            let components = `${translations[currentLanguage]['text-numbness-component']}: ${numbness}\n`;
+            components += `${translations[currentLanguage]['text-tingling-component']}: ${tingling}\n`;
+            components += `${translations[currentLanguage]['text-pinprick-component']}: ${pinprick}\n`;
+
+            if (currentModel === 'basic') {
+                const vibration = parseInt(document.querySelector('input[name="vibration"]:checked').value);
+                components += `${translations[currentLanguage]['text-vibration-component']}: ${vibration}\n`;
+            } else {
+                const achilles = parseInt(document.querySelector('input[name="achilles"]:checked').value);
+                const patellar = parseInt(document.querySelector('input[name="patellar"]:checked').value);
+                components += `${translations[currentLanguage]['text-achilles-component']}: ${achilles}\n`;
+                components += `${translations[currentLanguage]['text-patellar-component']}: ${patellar}\n`;
+            }
+
+            const text = `KTNS ASSESSMENT - ${date}
+Model: ${model}
+
+COMPONENT SCORES:
+${components}
+${translations[currentLanguage]['text-total']}: ${score}/${maxScore}
+
+INTERPRETATION:
+${interp}
+
+CLINICAL INFORMATION:
+Cutoff: ≥3 points
+${model === 'KTNS-Basic' ? 'AUC: 0.85, Sensitivity: 68%, Specificity: 87%' : 'AUC: 0.90, Sensitivity: 81%, Specificity: 81%'}
+
+Reference: Nolte et al. (2025). J Peripher Nerv Syst, 30, e70058`;
+
+            document.getElementById('export-text').textContent = text;
+        }
+
+        function copyToClipboard() {
+            const text = document.getElementById('export-text').textContent;
+            navigator.clipboard.writeText(text).then(() => {
+                const success = document.getElementById('copy-success');
+                success.style.display = 'block';
+                setTimeout(() => {
+                    success.style.display = 'none';
+                }, 3000);
+            });
+        }
+
+        // Make entire radio option divs clickable
+        function initializeRadioOptions() {
+            document.querySelectorAll('.radio-option').forEach(option => {
+                option.addEventListener('click', function() {
+                    const radio = this.querySelector('input[type="radio"]');
+                    if (radio && !radio.checked) {
+                        radio.checked = true;
+                        calculate();
+                    }
+                });
+            });
+        }
+
+        // Initialize
+        setLanguage(currentLanguage);
+        initializeRadioOptions();
+        calculate();
+    </script>
+</body>
+</html>
