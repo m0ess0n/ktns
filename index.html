@@ -49,6 +49,27 @@
             --warning-light: #FEF3C7;
             --error-red: #EF4444;
 
+            /* Severity Color Palette - Subtle with transparency */
+            --severity-none-bg: rgba(16, 185, 129, 0.08);
+            --severity-none-border: rgba(16, 185, 129, 0.3);
+            --severity-none-selected: rgba(16, 185, 129, 0.15);
+            --severity-none-selected-border: rgba(16, 185, 129, 0.5);
+
+            --severity-mild-bg: rgba(251, 191, 36, 0.08);
+            --severity-mild-border: rgba(251, 191, 36, 0.3);
+            --severity-mild-selected: rgba(251, 191, 36, 0.15);
+            --severity-mild-selected-border: rgba(251, 191, 36, 0.5);
+
+            --severity-moderate-bg: rgba(245, 158, 11, 0.08);
+            --severity-moderate-border: rgba(245, 158, 11, 0.3);
+            --severity-moderate-selected: rgba(245, 158, 11, 0.15);
+            --severity-moderate-selected-border: rgba(245, 158, 11, 0.5);
+
+            --severity-severe-bg: rgba(239, 68, 68, 0.08);
+            --severity-severe-border: rgba(239, 68, 68, 0.3);
+            --severity-severe-selected: rgba(239, 68, 68, 0.15);
+            --severity-severe-selected-border: rgba(239, 68, 68, 0.5);
+
             --border-radius: 12px;
             --border-radius-lg: 16px;
             --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -419,6 +440,71 @@
             background: var(--secondary-blue);
             border-color: var(--primary-blue);
             box-shadow: var(--shadow-sm);
+        }
+
+        /* Severity-based coloring for radio options */
+        .radio-option.severity-none {
+            background: var(--severity-none-bg);
+            border-color: var(--severity-none-border);
+        }
+
+        .radio-option.severity-none:hover {
+            background: var(--severity-none-selected);
+            border-color: var(--severity-none-selected-border);
+        }
+
+        .radio-option.severity-none:has(input:checked) {
+            background: var(--severity-none-selected);
+            border-color: var(--severity-none-selected-border);
+            box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+        }
+
+        .radio-option.severity-mild {
+            background: var(--severity-mild-bg);
+            border-color: var(--severity-mild-border);
+        }
+
+        .radio-option.severity-mild:hover {
+            background: var(--severity-mild-selected);
+            border-color: var(--severity-mild-selected-border);
+        }
+
+        .radio-option.severity-mild:has(input:checked) {
+            background: var(--severity-mild-selected);
+            border-color: var(--severity-mild-selected-border);
+            box-shadow: 0 0 0 3px rgba(251, 191, 36, 0.1);
+        }
+
+        .radio-option.severity-moderate {
+            background: var(--severity-moderate-bg);
+            border-color: var(--severity-moderate-border);
+        }
+
+        .radio-option.severity-moderate:hover {
+            background: var(--severity-moderate-selected);
+            border-color: var(--severity-moderate-selected-border);
+        }
+
+        .radio-option.severity-moderate:has(input:checked) {
+            background: var(--severity-moderate-selected);
+            border-color: var(--severity-moderate-selected-border);
+            box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.1);
+        }
+
+        .radio-option.severity-severe {
+            background: var(--severity-severe-bg);
+            border-color: var(--severity-severe-border);
+        }
+
+        .radio-option.severity-severe:hover {
+            background: var(--severity-severe-selected);
+            border-color: var(--severity-severe-selected-border);
+        }
+
+        .radio-option.severity-severe:has(input:checked) {
+            background: var(--severity-severe-selected);
+            border-color: var(--severity-severe-selected-border);
+            box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
         }
 
         .radio-option input[type="radio"] {
@@ -824,26 +910,26 @@
                     <div class="card-content">
                         <div class="card-body">
                             <div class="info-box text-info-anamnesis">
-                                <strong>Patient Symptoms:</strong> Ask about symptoms in the <strong>feet</strong>. Score severity based on interference with activities of daily living (ADL).
+                                <strong>Patient Symptoms:</strong> Ask about symptoms in the <strong>feet</strong>. Absent (<span style="color: #059669; font-weight: 600;">green</span>) = no symptoms. Mild (<span style="color: #F59E0B; font-weight: 600;">yellow</span>) = symptom present, not interference with sense of well-being or ADL. Moderate (<span style="color: #EA580C; font-weight: 600;">orange</span>) = symptom present, interference with well-being but not with ADL. Severe (<span style="color: #DC2626; font-weight: 600;">red</span>) = symptom causes interference with well-being and ADL.
                             </div>
 
                             <!-- Symptom Assessment -->
                             <div class="input-group">
                                 <label class="field-label text-numbness-label">Numbness in feet</label>
                                 <div class="radio-group">
-                                    <div class="radio-option">
+                                    <div class="radio-option severity-none">
                                         <input type="radio" id="numb-0" name="numbness" value="0" checked onchange="calculate()">
                                         <label for="numb-0" class="text-absent">Absent</label>
                                     </div>
-                                    <div class="radio-option">
+                                    <div class="radio-option severity-mild">
                                         <input type="radio" id="numb-1" name="numbness" value="1" onchange="calculate()">
                                         <label for="numb-1" class="text-mild">Mild</label>
                                     </div>
-                                    <div class="radio-option">
+                                    <div class="radio-option severity-moderate">
                                         <input type="radio" id="numb-2" name="numbness" value="2" onchange="calculate()">
                                         <label for="numb-2" class="text-moderate">Moderate</label>
                                     </div>
-                                    <div class="radio-option">
+                                    <div class="radio-option severity-severe">
                                         <input type="radio" id="numb-3" name="numbness" value="3" onchange="calculate()">
                                         <label for="numb-3" class="text-severe">Severe (ADL)</label>
                                     </div>
@@ -853,19 +939,19 @@
                             <div class="input-group">
                                 <label class="field-label text-tingling-label">Tingling in feet</label>
                                 <div class="radio-group">
-                                    <div class="radio-option">
+                                    <div class="radio-option severity-none">
                                         <input type="radio" id="ting-0" name="tingling" value="0" checked onchange="calculate()">
                                         <label for="ting-0" class="text-absent">Absent</label>
                                     </div>
-                                    <div class="radio-option">
+                                    <div class="radio-option severity-mild">
                                         <input type="radio" id="ting-1" name="tingling" value="1" onchange="calculate()">
                                         <label for="ting-1" class="text-mild">Mild</label>
                                     </div>
-                                    <div class="radio-option">
+                                    <div class="radio-option severity-moderate">
                                         <input type="radio" id="ting-2" name="tingling" value="2" onchange="calculate()">
                                         <label for="ting-2" class="text-moderate">Moderate</label>
                                     </div>
-                                    <div class="radio-option">
+                                    <div class="radio-option severity-severe">
                                         <input type="radio" id="ting-3" name="tingling" value="3" onchange="calculate()">
                                         <label for="ting-3" class="text-severe">Severe (ADL)</label>
                                     </div>
@@ -873,28 +959,28 @@
                             </div>
 
                             <div class="info-box text-info-tests">
-                                <strong>Clinical Tests:</strong> Test bilaterally. Score as abnormal only if <strong>both sides</strong> are affected.
+                                <strong>Clinical Tests:</strong> Test bilaterally. Score as abnormal only if <strong>both sides</strong> are affected. Options are color-coded: <span style="color: #059669; font-weight: 600;">green</span> (normal), <span style="color: #F59E0B; font-weight: 600;">yellow</span> (mild), <span style="color: #EA580C; font-weight: 600;">orange</span> (moderate), <span style="color: #DC2626; font-weight: 600;">red</span> (severe/absent).
                             </div>
 
                             <!-- Clinical Tests -->
                             <div class="input-group">
                                 <label class="field-label text-pinprick-label">Pinprick Test (Nociception)</label>
                                 <div class="radio-group">
-                                    <div class="radio-option">
+                                    <div class="radio-option severity-none">
                                         <input type="radio" id="pin-0" name="pinprick" value="0" checked onchange="calculate()">
                                         <label for="pin-0" class="text-normal">Normal</label>
                                     </div>
-                                    <div class="radio-option">
+                                    <div class="radio-option severity-mild">
                                         <input type="radio" id="pin-1" name="pinprick" value="1" onchange="calculate()">
-                                        <label for="pin-1">↓ Both toes</label>
+                                        <label for="pin-1" class="text-both-toes">↓ Both toes</label>
                                     </div>
-                                    <div class="radio-option">
+                                    <div class="radio-option severity-moderate">
                                         <input type="radio" id="pin-2" name="pinprick" value="2" onchange="calculate()">
-                                        <label for="pin-2">↓ To dorsum</label>
+                                        <label for="pin-2" class="text-to-dorsum">↓ To dorsum</label>
                                     </div>
-                                    <div class="radio-option">
+                                    <div class="radio-option severity-severe">
                                         <input type="radio" id="pin-3" name="pinprick" value="3" onchange="calculate()">
-                                        <label for="pin-3">↓ Above ankle</label>
+                                        <label for="pin-3" class="text-above-ankle">↓ Above ankle</label>
                                     </div>
                                 </div>
                             </div>
@@ -903,21 +989,21 @@
                             <div class="input-group" id="vibration-group">
                                 <label class="field-label text-vibration-label">Vibration Perception (Biothesiometer)</label>
                                 <div class="radio-group">
-                                    <div class="radio-option">
+                                    <div class="radio-option severity-none">
                                         <input type="radio" id="vib-0" name="vibration" value="0" checked onchange="calculate()">
                                         <label for="vib-0" class="text-normal">Normal</label>
                                     </div>
-                                    <div class="radio-option">
+                                    <div class="radio-option severity-mild">
                                         <input type="radio" id="vib-1" name="vibration" value="1" onchange="calculate()">
-                                        <label for="vib-1">↓ Both toes</label>
+                                        <label for="vib-1" class="text-both-toes">↓ Both toes</label>
                                     </div>
-                                    <div class="radio-option">
+                                    <div class="radio-option severity-moderate">
                                         <input type="radio" id="vib-2" name="vibration" value="2" onchange="calculate()">
-                                        <label for="vib-2">↓ To dorsum</label>
+                                        <label for="vib-2" class="text-to-dorsum">↓ To dorsum</label>
                                     </div>
-                                    <div class="radio-option">
+                                    <div class="radio-option severity-severe">
                                         <input type="radio" id="vib-3" name="vibration" value="3" onchange="calculate()">
-                                        <label for="vib-3">↓ To malleoli</label>
+                                        <label for="vib-3" class="text-to-malleoli">↓ To malleoli</label>
                                     </div>
                                 </div>
                             </div>
@@ -927,15 +1013,15 @@
                                 <div class="input-group">
                                     <label class="field-label text-achilles-label">Achilles Tendon Reflex</label>
                                     <div class="radio-group">
-                                        <div class="radio-option">
+                                        <div class="radio-option severity-none">
                                             <input type="radio" id="ach-0" name="achilles" value="0" checked onchange="calculate()">
                                             <label for="ach-0" class="text-normal">Normal</label>
                                         </div>
-                                        <div class="radio-option">
+                                        <div class="radio-option severity-moderate">
                                             <input type="radio" id="ach-1" name="achilles" value="1" onchange="calculate()">
                                             <label for="ach-1" class="text-reduced">Reduced</label>
                                         </div>
-                                        <div class="radio-option">
+                                        <div class="radio-option severity-severe">
                                             <input type="radio" id="ach-2" name="achilles" value="2" onchange="calculate()">
                                             <label for="ach-2" class="text-absent">Absent</label>
                                         </div>
@@ -945,15 +1031,15 @@
                                 <div class="input-group">
                                     <label class="field-label text-patellar-label">Patellar Tendon Reflex</label>
                                     <div class="radio-group">
-                                        <div class="radio-option">
+                                        <div class="radio-option severity-none">
                                             <input type="radio" id="pat-0" name="patellar" value="0" checked onchange="calculate()">
                                             <label for="pat-0" class="text-normal">Normal</label>
                                         </div>
-                                        <div class="radio-option">
+                                        <div class="radio-option severity-moderate">
                                             <input type="radio" id="pat-1" name="patellar" value="1" onchange="calculate()">
                                             <label for="pat-1" class="text-reduced">Reduced</label>
                                         </div>
-                                        <div class="radio-option">
+                                        <div class="radio-option severity-severe">
                                             <input type="radio" id="pat-2" name="patellar" value="2" onchange="calculate()">
                                             <label for="pat-2" class="text-absent">Absent</label>
                                         </div>
@@ -1120,19 +1206,23 @@
                 'text-model-advanced': 'KTNS-Advanced',
                 'text-model-advanced-desc': 'Met reflexonderzoek',
                 'text-calc-title': 'Klinische Beoordeling',
-                'text-info-anamnesis': '<strong>Patiënt Symptomen:</strong> Vraag naar symptomen in de voeten. Afwezig = geen symptomen. Mild = symptoom aanwezig, geen hinder. Matig = symptoom aanwezig, enige hinder. Ernstig (ADL) = symptoom veroorzaakt significante beperking in dagelijkse activiteiten.',
+                'text-info-anamnesis': '<strong>Patiënt Symptomen:</strong> Vraag naar symptomen in de voeten. Afwezig (<span style="color: #059669; font-weight: 600;">groen</span>) = geen symptomen. Licht (<span style="color: #F59E0B; font-weight: 600;">geel</span>) = symptoom aanwezig, geen hinder voor welbevinden of ADL. Matig (<span style="color: #EA580C; font-weight: 600;">oranje</span>) = symptoom aanwezig, hinder voor welbevinden maar niet voor ADL. Ernstig (<span style="color: #DC2626; font-weight: 600;">rood</span>) = symptoom veroorzaakt hinder voor welbevinden en ADL.',
                 'text-numbness-label': 'Gevoelloosheid voeten',
                 'text-tingling-label': 'Tintelingen voeten',
                 'text-absent': 'Afwezig',
-                'text-mild': 'Mild',
+                'text-mild': 'Licht',
                 'text-moderate': 'Matig',
                 'text-severe': 'Ernstig (ADL)',
-                'text-info-tests': '<strong>Klinische Tests:</strong> Test bilateraal (linker en rechter voet/been). Score als afwijkend alleen als beide zijden verminderde sensibiliteit vertonen. Bij eenzijdige afwijking = score Normaal.',
+                'text-info-tests': '<strong>Klinische Tests:</strong> Test bilateraal (linker en rechter voet/been). Score als afwijkend alleen als beide zijden verminderde sensibiliteit vertonen. Bij eenzijdige afwijking = score Normaal. Opties zijn kleurgecodeerd: <span style="color: #059669; font-weight: 600;">groen</span> (normaal), <span style="color: #F59E0B; font-weight: 600;">geel</span> (licht), <span style="color: #EA580C; font-weight: 600;">oranje</span> (matig), <span style="color: #DC2626; font-weight: 600;">rood</span> (ernstig/afwezig).',
                 'text-pinprick-label': 'Prikpijntest (Nociceptie)',
                 'text-vibration-label': 'Trillingszin (Biothesiometer)',
                 'text-achilles-label': 'Achillespeesreflex',
                 'text-patellar-label': 'Patellapeesreflex',
                 'text-normal': 'Normaal',
+                'text-both-toes': '↓ Beide tenen',
+                'text-to-dorsum': '↓ Tot voetrug',
+                'text-above-ankle': '↓ Boven enkel',
+                'text-to-malleoli': '↓ Tot malleoli',
                 'text-reduced': 'Verminderd',
                 'text-score-low': 'Score <3 — Laag Risico',
                 'text-interpretation-low': 'Geen indicatie voor verwijzing naar neuroloog op dit moment. Voortzetten routine monitoring.',
@@ -1163,19 +1253,23 @@
                 'text-model-advanced': 'KTNS-Advanced',
                 'text-model-advanced-desc': 'With reflex examination',
                 'text-calc-title': 'Clinical Assessment',
-                'text-info-anamnesis': '<strong>Patient Symptoms:</strong> Ask about symptoms in the feet. Absent = no symptoms. Mild = symptom present, no interference. Moderate = symptom present, some interference. Severe (ADL) = symptom causes significant limitation in activities of daily living.',
+                'text-info-anamnesis': '<strong>Patient Symptoms:</strong> Ask about symptoms in the feet. Absent (<span style="color: #059669; font-weight: 600;">green</span>) = no symptoms. Mild (<span style="color: #F59E0B; font-weight: 600;">yellow</span>) = symptom present, not interference with sense of well-being or ADL. Moderate (<span style="color: #EA580C; font-weight: 600;">orange</span>) = symptom present, interference with well-being but not with ADL. Severe (<span style="color: #DC2626; font-weight: 600;">red</span>) = symptom causes interference with well-being and ADL.',
                 'text-numbness-label': 'Numbness in feet',
                 'text-tingling-label': 'Tingling in feet',
                 'text-absent': 'Absent',
                 'text-mild': 'Mild',
                 'text-moderate': 'Moderate',
                 'text-severe': 'Severe (ADL)',
-                'text-info-tests': '<strong>Clinical Tests:</strong> Test bilaterally (left and right foot/leg). Score as abnormal only if both sides show reduced sensation. If unilateral abnormality = score Normal.',
+                'text-info-tests': '<strong>Clinical Tests:</strong> Test bilaterally (left and right foot/leg). Score as abnormal only if both sides show reduced sensation. If unilateral abnormality = score Normal. Options are color-coded: <span style="color: #059669; font-weight: 600;">green</span> (normal), <span style="color: #F59E0B; font-weight: 600;">yellow</span> (mild), <span style="color: #EA580C; font-weight: 600;">orange</span> (moderate), <span style="color: #DC2626; font-weight: 600;">red</span> (severe/absent).',
                 'text-pinprick-label': 'Pinprick Test (Nociception)',
                 'text-vibration-label': 'Vibration Perception (Biothesiometer)',
                 'text-achilles-label': 'Achilles Tendon Reflex',
                 'text-patellar-label': 'Patellar Tendon Reflex',
                 'text-normal': 'Normal',
+                'text-both-toes': '↓ Both toes',
+                'text-to-dorsum': '↓ To dorsum',
+                'text-above-ankle': '↓ Above ankle',
+                'text-to-malleoli': '↓ To malleoli',
                 'text-reduced': 'Reduced',
                 'text-score-low': 'Score <3 — Low Risk',
                 'text-interpretation-low': 'No indication for neurologist referral at this time. Continue routine monitoring.',
